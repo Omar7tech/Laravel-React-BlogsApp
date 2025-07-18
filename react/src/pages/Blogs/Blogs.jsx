@@ -19,6 +19,11 @@ export default function Blogs() {
         to: 0
     });
 
+
+
+
+
+
     const updateUrlParams = useCallback((newFilter, newSearchTerm, newCategory, newPage) => {
         const params = new URLSearchParams(window.location.search);
 
@@ -51,6 +56,7 @@ export default function Blogs() {
 
     // Effect to read initial state from URL on mount
     useEffect(() => {
+
         const params = new URLSearchParams(window.location.search);
         const urlFilter = params.get("filter") || "all";
         const urlSearch = params.get("search") || "";
@@ -335,6 +341,7 @@ export default function Blogs() {
                     onChange={() => handleCategoryChange("all")}
                 />
                 {categories.map((category) => (
+                     
                     <input
                         key={category.slug}
                         className="btn btn-sm"

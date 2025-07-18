@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import React from 'react';
+import { motion as Motion } from 'framer-motion';
 
 export default function Card({ blog, onCategoryClick }) {
     const formatDate = (dateString) => {
@@ -9,30 +11,41 @@ export default function Card({ blog, onCategoryClick }) {
         });
     };
 
+    function hasUrlParameter(paramName = 'category') {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        return params.has(paramName);
+    }
+
     // Default values in case blog is undefined
     const title = blog?.title || "Medium Card";
     const author = blog?.user?.name || "Ahmad Kamal";
     const email = blog?.user?.email || "omar@gmail.com";
     const createdAt = blog?.created_at || "2020/34/3";
-    const content = blog?.content || "A card component has a figure, a body part, and inside body there are title and actions parts";
+    // This is your original content prop, and a longer default to ensure visual truncation
+    const content = blog?.content || "Beatae a ullam exercitationem sed mollitia natus. Aliquid asperiores eius atque quia animi saepe distinctio corporis. Atque ratione omnis officiis ad aut quo ratione totam. Neque quos placeat ipsum nihil incidunt perspiciatis ut. This additional text makes sure the visual truncation and fade are always apparent, as requested.";
     const slug = blog?.slug || "#";
     const categoryName = blog?.category?.name || "";
-    const categorySlug = blog?.category?.slug || ""; // Get the slug for filtering
+    const categorySlug = blog?.category?.slug || "";
 
     // Handler for clicking the category badge
     const handleCategoryBadgeClick = (event) => {
-        // Essential: Prevent any default link behavior of parent elements
         event.preventDefault();
-        // Essential: Stop the event from bubbling up to any other parent click handlers
         event.stopPropagation();
 
         if (onCategoryClick && categorySlug) {
-            onCategoryClick(categorySlug); // Call the prop function with the category slug
+            onCategoryClick(categorySlug);
         }
     };
 
     return (
-        <div className="card w-full bg-base-200/60 shadow-sm">
+        <Motion.div
+            className="card w-full bg-base-200/60 shadow-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            whileHover={{ scale: 1.02, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" }}
+        >
             <div className="card-body">
                 <div className="flex justify-between items-center">
                     <div className="flex justify-start items-center space-x-3">
@@ -50,7 +63,6 @@ export default function Card({ blog, onCategoryClick }) {
                         </div>
                     </div>
                     <div>
-                        {/* Link for viewing the individual blog post */}
                         <Link to={`/blogs/${slug}`} >
                             <button className="btn btn-ghost">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -63,8 +75,19 @@ export default function Card({ blog, onCategoryClick }) {
                 </div>
                 <div className="divider my-[-3px]"></div>
                 <h2 className="card-title">{title}</h2>
-                <p>{content}</p>
-                <div className="py-3 flex items-center font-semibold text-blue-500 cursor-pointer transition-transform duration-200 hover:scale-105 ">
+
+                {/* === MODIFIED CONTENT SECTION START === */}
+                {/* Apply fixed height and overflow directly to a container around the <p> */}
+                <div className="relative overflow-hidden max-h-24"> {/* max-h-24 limits the content to about 3-4 lines */}
+                    <p className="text-justify">
+                        {content}
+                    </p>
+                    {/* The fading overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-base-200/60 to-transparent pointer-events-none"></div>
+                </div>
+                {/* === MODIFIED CONTENT SECTION END === */}
+
+                <div className={`py-3 flex items-center font-semibold ${hasUrlParameter() ? '' : 'text-blue-500 transition-transform duration-200 hover:scale-102 cursor-pointer' }`}>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3">
                             <path fillRule="evenodd" d="M9.493 2.852a.75.75 0 0 0-1.486-.204L7.545 6H4.198a.75.75 0 0 0 0 1.5h3.14l-.69 5H3.302a.75.75 0 0 0 0 1.5h3.14l-.435 3.148a.75.75 0 0 0 1.486.204L7.955 14h2.986l-.434 3.148a.75.75 0 0 0 1.486.204L12.456 14h3.346a.75.75 0 0 0 0-1.5h-3.14l.69-5h3.346a.75.75 0 0 0 0-1.5h-3.14l.435-3.148a.75.75 0 0 0-1.486-.204L12.045 6H9.059l.434-3.148ZM8.852 7.5l-.69 5h2.986l.69-5H8.852Z" clipRule="evenodd" />
@@ -74,7 +97,7 @@ export default function Card({ blog, onCategoryClick }) {
                     {categoryName && (
                         <div
                             className=""
-                            onClick={handleCategoryBadgeClick} 
+                            onClick={handleCategoryBadgeClick}
                             aria-label={`Filter by category: ${categoryName}`}
                         >
                             {categoryName}
@@ -110,8 +133,7 @@ export default function Card({ blog, onCategoryClick }) {
                         </Link>
                     </div>
                 </div>
-
             </div>
-        </div>
+        </Motion.div>
     );
 }

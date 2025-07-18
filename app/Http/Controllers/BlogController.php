@@ -46,7 +46,7 @@ class BlogController extends Controller
             $query->latest();
         }
 
-        $blogs = $query->paginate(15); // Or whatever paginate number you prefer
+        $blogs = $query->paginate(16); // Or whatever paginate number you prefer
 
         return BlogResource::collection($blogs);
     }
