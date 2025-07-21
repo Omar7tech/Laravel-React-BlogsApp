@@ -272,6 +272,7 @@ export default function Blogs() {
                 {/* Filter Buttons */}
                 <div className="join flex flex-wrap justify-center gap-2">
                     <input
+                        disabled={loading}
                         className="join-item btn"
                         type="radio"
                         name="filter"
@@ -280,6 +281,7 @@ export default function Blogs() {
                         onChange={() => handleFilterChange("all")}
                     />
                     <input
+                        disabled={loading}
                         className="join-item btn"
                         type="radio"
                         name="filter"
@@ -288,6 +290,7 @@ export default function Blogs() {
                         onChange={() => handleFilterChange("newest")}
                     />
                     <input
+                        disabled={loading}
                         className="join-item btn"
                         type="radio"
                         name="filter"
@@ -316,6 +319,7 @@ export default function Blogs() {
                         </g>
                     </svg>
                     <input
+                        disabled={loading}
                         type="search"
                         className="grow"
                         placeholder="Search by title, content, or URL"
@@ -333,7 +337,7 @@ export default function Blogs() {
         return (
             <div className="filter space-y-1 overflow-x-auto flex flex-nowrap">
                 <input
-                    className="btn btn-sm filter-reset"
+                    className="btn btn-sm filter-reset btn-soft btn-error"
                     type="radio"
                     name="category-filter"
                     aria-label="All"
@@ -341,7 +345,7 @@ export default function Blogs() {
                     onChange={() => handleCategoryChange("all")}
                 />
                 {categories.map((category) => (
-                     
+
                     <input
                         key={category.slug}
                         className="btn btn-sm"
@@ -357,7 +361,7 @@ export default function Blogs() {
     }
 
     return (
-        <div className="w-full space-y-6">
+        <div className="w-full space-y-6 p-5 pt-5">
             {/* Filters and Search Bar - Always visible */}
             {renderFiltersAndSearchBar()}
             {renderCategoriesFilters()}
